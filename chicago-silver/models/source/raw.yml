@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    database: chicago-assessment
+
+    tables:
+      - name: taxi_trip

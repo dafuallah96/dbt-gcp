@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: taxi_trip
+    description: This model provides detailed information on taxi trips, including start and end times, locations, fare details, and trip distances.
+    meta:
+      owners: dafuallah
+    
+    columns:
+      - name: unique_key
+        description: Unique identifier for each trip.
+      - name: taxi_id
+        description: Identifier for the taxi associated with the trip.
+      - name: trip_start_timestamp
+        description: Timestamp indicating the start of the trip.
+      - name: trip_end_timestamp
+        description: Timestamp indicating the end of the trip.
+      - name: trip_seconds
+        description: Duration of the trip in seconds.
+      - name: trip_miles
+        description: Distance of the trip in miles.
+      - name: pickup_census_tract
+        description: Census tract of the pickup location.
+      - name: dropoff_census_tract
+        description: Census tract of the dropoff location.
+      - name: pickup_community_area
+        description: Community area of the pickup location.
+      - name: dropoff_community_area
+        description: Community area of the dropoff location.
+      - name: fare
+        description: Total fare for the trip.
+      - name: tips
+        description: Total tips received for the trip.
+      - name: tolls
+        description: Total toll charges for the trip.
+      - name: extras
+        description: Additional charges applied to the trip.
+      - name: trip_total
+        description: Total cost of the trip, including fare, tips, tolls, and extras.
+      - name: payment_type
+        description: Type of payment used for the trip (e.g., cash, credit).
+      - name: company
+        description: Taxi company associated with the trip.
+      - name: pickup_latitude
+        description: Latitude coordinate of the pickup location.
+      - name: pickup_longitude
+        description: Longitude coordinate of the pickup location.
+      - name: pickup_location
+        description: Combined latitude and longitude coordinates for the pickup location.
+      - name: dropoff_latitude
+        description: Latitude coordinate of the dropoff location.
+      - name: dropoff_longitude
+        description: Longitude coordinate of the dropoff location.
+      - name: dropoff_location
+        description: Combined latitude and longitude coordinates for the dropoff location.
