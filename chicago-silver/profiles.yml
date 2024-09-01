@@ -1,4 +1,4 @@
-my-bigquery-db:
+chicago_profile:
   target: prod
   outputs:
     prod:
