@@ -64,9 +64,25 @@ dbt run --profiles-dir ~/.dbt --profile my-bigquery-db --target gold -m <model_n
 ### over_workers
 - Identifies the top 100 taxi drivers who work the most hours without taking significant breaks.
 - Based on the taxi_trip data from the Silver layer.
--
 
 ## Screenshots of Data Structure in GCP
 ![Screenshot 2024-09-01 at 11 53 32 PM](https://github.com/user-attachments/assets/93ac6735-19e7-4f4d-95a6-ef48ed655133)
+
+## CI/CD
+This was implemented using GitHub Actions. There are two workflows:
+
+1. **dbt_run_on_push**:
+   - **Trigger**: This workflow is triggered whenever there is a push to the `main` branch.
+   - **Purpose**: It automatically runs the DBT models for both the silver and gold datasets, ensuring that the latest changes are always applied to your data models as soon as they are pushed to the repository.
+   - **Steps**:
+     - Checks out the repository.
+     - Sets up Python.
+     - Installs dependencies including `dbt-core` and `dbt-bigquery`.
+     - Configures DBT profiles for both silver and gold datasets.
+     - Runs DBT models for the silver and gold datasets.
+
+2. **dbt_run_daily_schedule**:
+   - **Trigger**: This workflow is scheduled to run daily at midnight UTC.
+   - **Purpose**: It ensures that the DBT models for both the silver and gold datasets are updated daily, even if no new changes are pushed to the repository.
 
 
