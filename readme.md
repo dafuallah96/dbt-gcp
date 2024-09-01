@@ -86,9 +86,34 @@ dbt run --profiles-dir ~/.dbt --profile my-bigquery-db --target gold -m <model_n
 - Identifies the top 100 taxi drivers who earn the most tips over the last three months.
 - Based on the taxi_trip data from the Silver layer.
 
+
 ### over_workers
 - Identifies the top 100 taxi drivers who work the most hours without taking significant breaks.
 - Based on the taxi_trip data from the Silver layer.
+
+```bash
+WITH daily_work_hours AS (
+    SELECT
+        taxi_id,
+        DATE(trip_start_timestamp) AS work_date,
+        SUM(TIMESTAMP_DIFF(trip_end_timestamp, trip_start_timestamp, SECOND)) / 3600.0 AS daily_hours
+    FROM
+        {{ source('silver', 'taxi_trip') }}
+    GROUP BY
+        taxi_id,
+        DATE(trip_start_timestamp)
+)
+SELECT
+    taxi_id,
+    SUM(daily_hours) AS total_work_hours
+FROM
+    daily_work_hours
+GROUP BY
+    taxi_id
+ORDER BY
+    total_work_hours DESC
+LIMIT 100
+```
 
 ## Screenshots of Data Structure in GCP
 ![Screenshot 2024-09-01 at 11 53 32 PM](https://github.com/user-attachments/assets/93ac6735-19e7-4f4d-95a6-ef48ed655133)
