@@ -81,6 +81,9 @@ This was implemented using GitHub Actions. There are two workflows:
      - Configures DBT profiles for both silver and gold datasets.
      - Runs DBT models for the silver and gold datasets.
 
+<img width="816" alt="Screenshot 2024-09-02 at 1 12 40 AM" src="https://github.com/user-attachments/assets/a69e535a-991e-4749-8057-d072e9759f3f">
+
+
 2. **dbt_run_daily_schedule**:
    - **Trigger**: This workflow is scheduled to run daily at midnight UTC.
    - **Purpose**: It ensures that the DBT models for both the silver and gold datasets are updated daily, even if no new changes are pushed to the repository.
