@@ -25,7 +25,10 @@ jobs:
         pip install dbt-core dbt-bigquery
 
     - name: Create service account key file
-      run: echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > /tmp/gcp-key.json
+      run: |
+        cat <<EOF > /tmp/gcp-key.json
+        ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+        EOF
 
     - name: Create DBT profiles.yml for silver
       working-directory: ./chicago-silver
