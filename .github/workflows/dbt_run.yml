@@ -1,4 +1,4 @@
-name: dbt_run_schedule
+name: dbt_run
 
 on:
   push:
