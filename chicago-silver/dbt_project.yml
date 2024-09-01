@@ -1,0 +1,25 @@
+name: 'chicago'
+version: '1.0.0'
+profile: 'chicago_profile'
+config-version: 2
+
+model-paths: 
+  - models/main/table
+  - models/main/view
+  - models/private
+  - models/source
+
+target-path: "target"
+
+models:
+  chicago:
+    main:
+      table:
+        +materialized: view
+      view:
+        +materialized: view
+    private:
+      +materialized: table
+      +schema: private_schema
+    source:
+      +materialized: ephemeral
