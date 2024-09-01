@@ -24,15 +24,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install dbt-core dbt-bigquery
 
-    - name: Setup GCP credentials
-      id: auth
-      uses: google-github-actions/auth@v1
-      with:
-        credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-        create_credentials_file: true
-
-    - name: Capture GCP credentials file path
-      run: echo "CREDENTIALS_FILE_PATH=${{ steps.auth.outputs.credentials_file }}" >> $GITHUB_ENV
+    - name: Create service account key file
+      run: echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > /tmp/gcp-key.json
 
     - name: Create DBT profiles.yml for silver
       working-directory: ./chicago-silver
@@ -46,7 +39,7 @@ jobs:
         echo "      project: chicago-assessment" >> profiles.yml
         echo "      dataset: silver" >> profiles.yml
         echo "      threads: 4" >> profiles.yml
-        echo "      keyfile: '${{ env.CREDENTIALS_FILE_PATH }}'" >> profiles.yml
+        echo "      keyfile: '/tmp/gcp-key.json'" >> profiles.yml
 
     - name: Echo DBT profiles.yml for silver
       working-directory: ./chicago-silver
@@ -64,7 +57,7 @@ jobs:
         echo "      project: chicago-assessment" >> profiles.yml
         echo "      dataset: gold" >> profiles.yml
         echo "      threads: 4" >> profiles.yml
-        echo "      keyfile: '${{ env.CREDENTIALS_FILE_PATH }}'" >> profiles.yml
+        echo "      keyfile: '/tmp/gcp-key.json'" >> profiles.yml
 
     - name: Echo DBT profiles.yml for gold
       working-directory: ./chicago-gold
