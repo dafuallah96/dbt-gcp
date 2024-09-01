@@ -44,3 +44,9 @@ dbt run --profiles-dir ~/.dbt --profile my-bigquery-db --target gold -m <model_n
 ### over_workers
 - Identifies the top 100 taxi drivers who work the most hours without taking significant breaks.
 - Based on the taxi_trip data from the Silver layer.
+-
+
+## Screenshots of Data Structure in GCP
+![Screenshot 2024-09-01 at 11 53 32 PM](https://github.com/user-attachments/assets/93ac6735-19e7-4f4d-95a6-ef48ed655133)
+
+
