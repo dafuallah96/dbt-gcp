@@ -2,6 +2,26 @@
 
 This project contains the dbt models for processing and analyzing Chicago taxi trip data. The data is organized into two layers: Silver and Gold.
 
+### Ingestion Process
+
+- **Public Dataset to BigQuery**: The raw taxi trip data is ingested from a public dataset into BigQuery. This ingestion is scheduled to run daily using a BigQuery scheduled query. The scheduled query should merge new data into the existing dataset to ensure that the most up-to-date information is available for downstream processing.
+
+#### Screenshot of the schedule query
+![Screenshot 2024-09-01 at 11 56 53 PM](https://github.com/user-attachments/assets/4fc1652e-e179-48a7-abb3-2237b99dd207)
+
+
+```bash
+MERGE raw.taxi_trip AS target
+USING `bigquery-public-data.chicago_taxi_trips.taxi_trips` AS source
+ON target.unique_key = source.unique_key
+WHEN MATCHED THEN
+  UPDATE SET
+    target.taxi_id = source.taxi_id
+WHEN NOT MATCHED THEN
+  INSERT (unique_key, taxi_id, trip_start_timestamp, trip_end_timestamp, trip_seconds, trip_miles, pickup_census_tract, dropoff_census_tract, pickup_community_area, dropoff_community_area, fare, tips, tolls, extras, trip_total, payment_type, company, pickup_latitude, pickup_longitude, pickup_location, dropoff_latitude, dropoff_longitude, dropoff_location)
+  VALUES (source.unique_key, source.taxi_id, source.trip_start_timestamp, source.trip_end_timestamp, source.trip_seconds, source.trip_miles, source.pickup_census_tract, source.dropoff_census_tract, source.pickup_community_area, source.dropoff_community_area, source.fare, source.tips, source.tolls, source.extras, source.trip_total, source.payment_type, source.company, source.pickup_latitude, source.pickup_longitude, source.pickup_location, source.dropoff_latitude, source.dropoff_longitude, source.dropoff_location);
+```
+
 ## Overview of Layers
 
 ### Silver Layer
