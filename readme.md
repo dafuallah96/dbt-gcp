@@ -6,7 +6,7 @@ This project contains the dbt models for processing and analyzing Chicago taxi t
 
 - **Public Dataset to BigQuery**: The raw taxi trip data is ingested from a public dataset into BigQuery. This ingestion is scheduled to run daily using a BigQuery scheduled query. The scheduled query should merge new data into the existing dataset and appends new data to ensure that the most up-to-date information is available for downstream processing. It is technically a full refresh as it compared and upserts, the query can be adjusted further to not update if there's no changes and add new record.
 
-#### Why not airbyte?
+#### Why not airflow?
 - I don't think a complex orchestrator is necessary, especially since this can be efficiently handled with a scheduled query. However, if needed, I can set it up.
 
 #### Screenshot of the schedule query
