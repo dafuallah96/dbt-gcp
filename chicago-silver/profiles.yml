@@ -7,5 +7,5 @@ chicago_profile:
       project: chicago-assessment
       dataset: silver
       threads: 4 
-      keyfile: /Users/ddafaallah/Desktop/research_v2/dbt/chicago-silver/chicago-assessment-e6cd85f68d50.json
+      keyfile: null
       OPTIONAL_CONFIG: VALUE
