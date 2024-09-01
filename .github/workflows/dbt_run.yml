@@ -25,15 +25,14 @@ jobs:
         pip install dbt-bigquery
 
     - name: Setup GCP credentials
-      uses: google-github-actions/setup-gcloud@v1
+      uses: google-github-actions/auth@v1
       with:
-        service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-        export_default_credentials: true
+        credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
-    - name: Run DBT models
+    - name: Run DBT models for silver
       run: |
-        dbt run --profiles-dir ./dbt --target dev
+        dbt run --profiles-dir ./chicago-silver --target prod
 
-    - name: Run DBT tests
+    - name: Run DBT models for gold
       run: |
-        dbt test --profiles-dir ./dbt --target dev
+        dbt run --profiles-dir ./chicago-gold --target prod
