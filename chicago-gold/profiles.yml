@@ -1,7 +1,16 @@
 my-bigquery-db:
   target: dev
   outputs:
-    dev:
+    silver:
+      type: bigquery
+      method: service-account
+      project: chicago-assessment
+      dataset: silver
+      threads: 4 
+      keyfile: /Users/ddafaallah/Desktop/research_v2/dbt/chicago-silver/chicago-assessment-e6cd85f68d50.json
+      OPTIONAL_CONFIG: VALUE
+
+    gold:
       type: bigquery
       method: service-account
       project: chicago-assessment
