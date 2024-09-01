@@ -4,7 +4,7 @@ This project contains the dbt models for processing and analyzing Chicago taxi t
 
 ### Ingestion Process
 
-- **Public Dataset to BigQuery**: The raw taxi trip data is ingested from a public dataset into BigQuery. This ingestion is scheduled to run daily using a BigQuery scheduled query. The scheduled query should merge new data into the existing dataset to ensure that the most up-to-date information is available for downstream processing.
+- **Public Dataset to BigQuery**: The raw taxi trip data is ingested from a public dataset into BigQuery. This ingestion is scheduled to run daily using a BigQuery scheduled query. The scheduled query should merge new data into the existing dataset and appends new data to ensure that the most up-to-date information is available for downstream processing.
 
 #### Screenshot of the schedule query
 ![Screenshot 2024-09-01 at 11 56 53 PM](https://github.com/user-attachments/assets/4fc1652e-e179-48a7-abb3-2237b99dd207)
