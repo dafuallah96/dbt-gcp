@@ -1,0 +1,75 @@
+name: dbt_run_daily_schedule
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  run_dbt:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install dbt-core dbt-bigquery
+
+    - name: Create service account key file
+      run: |
+        cat <<EOF > /tmp/gcp-key.json
+        ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+        EOF
+
+    - name: Create DBT profiles.yml for silver
+      working-directory: ./chicago-silver
+      run: |
+        echo "chicago_profile:" > profiles.yml
+        echo "  target: prod" >> profiles.yml
+        echo "  outputs:" >> profiles.yml
+        echo "    prod:" >> profiles.yml
+        echo "      type: bigquery" >> profiles.yml
+        echo "      method: service-account" >> profiles.yml
+        echo "      project: chicago-assessment" >> profiles.yml
+        echo "      dataset: silver" >> profiles.yml
+        echo "      threads: 4" >> profiles.yml
+        echo "      keyfile: '/tmp/gcp-key.json'" >> profiles.yml
+
+    - name: Echo DBT profiles.yml for silver
+      working-directory: ./chicago-silver
+      run: cat profiles.yml
+
+    - name: Create DBT profiles.yml for gold
+      working-directory: ./chicago-gold
+      run: |
+        echo "chicago_profile:" > profiles.yml
+        echo "  target: prod" >> profiles.yml
+        echo "  outputs:" >> profiles.yml
+        echo "    prod:" >> profiles.yml
+        echo "      type: bigquery" >> profiles.yml
+        echo "      method: service-account" >> profiles.yml
+        echo "      project: chicago-assessment" >> profiles.yml
+        echo "      dataset: gold" >> profiles.yml
+        echo "      threads: 4" >> profiles.yml
+        echo "      keyfile: '/tmp/gcp-key.json'" >> profiles.yml
+
+    - name: Echo DBT profiles.yml for gold
+      working-directory: ./chicago-gold
+      run: cat profiles.yml
+
+    - name: Run DBT models for silver
+      working-directory: ./chicago-silver
+      run: |
+        dbt run --target prod
+    
+    - name: Run DBT models for gold
+      working-directory: ./chicago-gold
+      run: |
+        dbt run --target prod
