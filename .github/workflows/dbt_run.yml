@@ -30,9 +30,11 @@ jobs:
         credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
     - name: Run DBT models for silver
+      working-directory: ./chicago-silver
       run: |
-        dbt run --profiles-dir ./chicago-silver --target prod
-
+        dbt run --target dev
+    
     - name: Run DBT models for gold
+      working-directory: ./chicago-gold
       run: |
-        dbt run --profiles-dir ./chicago-gold --target prod
+        dbt run --target prod
