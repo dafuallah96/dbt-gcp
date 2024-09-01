@@ -7,5 +7,4 @@ chicago_profile:
       project: chicago-assessment
       dataset: gold
       threads: 4 
-      keyfile: null
-      OPTIONAL_CONFIG: VALUE
+

@@ -7,5 +7,3 @@ chicago_profile:
       project: chicago-assessment
       dataset: silver
       threads: 4 
-      keyfile: null
-      OPTIONAL_CONFIG: VALUE
