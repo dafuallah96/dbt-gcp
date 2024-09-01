@@ -1,0 +1,8 @@
+version: 2
+
+models:
+  - name: tip_earners
+    description: This model aggregates the total tips earned by each driver.
+    meta:
+      owners: dafuallah
+    

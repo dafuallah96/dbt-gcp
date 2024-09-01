@@ -12,7 +12,7 @@ model-paths:
 target-path: "target"
 
 models:
-  chicago:
+  chicago-gold:
     main:
       table:
         +materialized: view
