@@ -1,0 +1,39 @@
+name: dbt_run_schedule
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  run_dbt:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install dbt-bigquery
+
+    - name: Setup GCP credentials
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+        export_default_credentials: true
+
+    - name: Run DBT models
+      run: |
+        dbt run --profiles-dir ./dbt --target dev
+
+    - name: Run DBT tests
+      run: |
+        dbt test --profiles-dir ./dbt --target dev
