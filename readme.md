@@ -4,10 +4,13 @@ This project contains the dbt models for processing and analyzing Chicago taxi t
 
 ### Ingestion Process
 
-- **Public Dataset to BigQuery**: The raw taxi trip data is ingested from a public dataset into BigQuery. This ingestion is scheduled to run daily using a BigQuery scheduled query. The scheduled query should merge new data into the existing dataset and appends new data to ensure that the most up-to-date information is available for downstream processing.
+- **Public Dataset to BigQuery**: The raw taxi trip data is ingested from a public dataset into BigQuery. This ingestion is scheduled to run daily using a BigQuery scheduled query. The scheduled query should merge new data into the existing dataset and appends new data to ensure that the most up-to-date information is available for downstream processing. It is technically a full refresh as it compared and upserts, the query can be adjusted further to not update if there's no changes and add new record.
+
+#### Why not airbyte?
+- I don't think a complex orchestrator is necessary, especially since this can be efficiently handled with a scheduled query. However, if needed, I can set it up.
 
 #### Screenshot of the schedule query
-![Screenshot 2024-09-01 at 11 56 53 PM](https://github.com/user-attachments/assets/4fc1652e-e179-48a7-abb3-2237b99dd207)
+<img width="700" alt="Screenshot 2024-09-02 at 1 36 48 AM" src="https://github.com/user-attachments/assets/40cef189-a390-4d11-8584-4888f3860730">
 
 
 ```bash
@@ -16,7 +19,28 @@ USING `bigquery-public-data.chicago_taxi_trips.taxi_trips` AS source
 ON target.unique_key = source.unique_key
 WHEN MATCHED THEN
   UPDATE SET
-    target.taxi_id = source.taxi_id
+    target.taxi_id = source.taxi_id,
+    target.trip_start_timestamp = source.trip_start_timestamp,
+    target.trip_end_timestamp = source.trip_end_timestamp,
+    target.trip_seconds = source.trip_seconds,
+    target.trip_miles = source.trip_miles,
+    target.pickup_census_tract = source.pickup_census_tract,
+    target.dropoff_census_tract = source.dropoff_census_tract,
+    target.pickup_community_area = source.pickup_community_area,
+    target.dropoff_community_area = source.dropoff_community_area,
+    target.fare = source.fare,
+    target.tips = source.tips,
+    target.tolls = source.tolls,
+    target.extras = source.extras,
+    target.trip_total = source.trip_total,
+    target.payment_type = source.payment_type,
+    target.company = source.company,
+    target.pickup_latitude = source.pickup_latitude,
+    target.pickup_longitude = source.pickup_longitude,
+    target.pickup_location = source.pickup_location,
+    target.dropoff_latitude = source.dropoff_latitude,
+    target.dropoff_longitude = source.dropoff_longitude,
+    target.dropoff_location = source.dropoff_location
 WHEN NOT MATCHED THEN
   INSERT (unique_key, taxi_id, trip_start_timestamp, trip_end_timestamp, trip_seconds, trip_miles, pickup_census_tract, dropoff_census_tract, pickup_community_area, dropoff_community_area, fare, tips, tolls, extras, trip_total, payment_type, company, pickup_latitude, pickup_longitude, pickup_location, dropoff_latitude, dropoff_longitude, dropoff_location)
   VALUES (source.unique_key, source.taxi_id, source.trip_start_timestamp, source.trip_end_timestamp, source.trip_seconds, source.trip_miles, source.pickup_census_tract, source.dropoff_census_tract, source.pickup_community_area, source.dropoff_community_area, source.fare, source.tips, source.tolls, source.extras, source.trip_total, source.payment_type, source.company, source.pickup_latitude, source.pickup_longitude, source.pickup_location, source.dropoff_latitude, source.dropoff_longitude, source.dropoff_location);
