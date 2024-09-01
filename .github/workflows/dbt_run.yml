@@ -20,7 +20,7 @@ jobs:
         python-version: '3.8'
 
     - name: Setup GCP credentials
-      id: auth  # Add an ID to this step
+      id: auth
       uses: google-github-actions/auth@v1
       with:
         credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
