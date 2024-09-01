@@ -38,12 +38,12 @@ jobs:
       working-directory: ./chicago-silver
       run: |
         echo "chicago_profile:" > profiles.yml
-        echo "  target: dev" >> profiles.yml
+        echo "  target: prof" >> profiles.yml
         echo "  outputs:" >> profiles.yml
-        echo "    dev:" >> profiles.yml
+        echo "    prod:" >> profiles.yml
         echo "      type: bigquery" >> profiles.yml
         echo "      method: service-account" >> profiles.yml
-        echo "      project: your-gcp-project-id" >> profiles.yml
+        echo "      project: chicago-assessment" >> profiles.yml
         echo "      dataset: silver" >> profiles.yml
         echo "      threads: 4" >> profiles.yml
         echo "      keyfile: '${{ env.CREDENTIALS_FILE_PATH }}'" >> profiles.yml
@@ -57,7 +57,7 @@ jobs:
         echo "    prod:" >> profiles.yml
         echo "      type: bigquery" >> profiles.yml
         echo "      method: service-account" >> profiles.yml
-        echo "      project: your-gcp-project-id" >> profiles.yml
+        echo "      project: chicago-assessment" >> profiles.yml
         echo "      dataset: gold" >> profiles.yml
         echo "      threads: 4" >> profiles.yml
         echo "      keyfile: '${{ env.CREDENTIALS_FILE_PATH }}'" >> profiles.yml
