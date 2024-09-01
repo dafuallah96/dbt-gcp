@@ -12,6 +12,7 @@ This project contains the dbt models for processing and analyzing Chicago taxi t
 #### Screenshot of the schedule query
 <img width="700" alt="Screenshot 2024-09-02 at 1 36 48 AM" src="https://github.com/user-attachments/assets/40cef189-a390-4d11-8584-4888f3860730">
 
+#### Query
 
 ```bash
 MERGE raw.taxi_trip AS target
