@@ -19,26 +19,50 @@ jobs:
       with:
         python-version: '3.8'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install dbt-bigquery
-
     - name: Setup GCP credentials
+      id: auth  # Add an ID to this step
       uses: google-github-actions/auth@v1
       with:
         credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
         create_credentials_file: true
 
-    - name: Set GOOGLE_APPLICATION_CREDENTIALS
-      run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ steps.auth.outputs.credentials_file }}" >> $GITHUB_ENV
+    - name: Capture GCP credentials file path
+      run: echo "CREDENTIALS_FILE_PATH=${{ steps.auth.outputs.credentials_file }}" >> $GITHUB_ENV
 
-    - name: Run DBT models for silver
+    - name: Create DBT profiles.yml for silver
       working-directory: ./chicago-silver
       run: |
-        dbt run --target prod
-    
-    - name: Run DBT models for gold
+        echo "chicago_profile:" > profiles.yml
+        echo "  target: dev" >> profiles.yml
+        echo "  outputs:" >> profiles.yml
+        echo "    dev:" >> profiles.yml
+        echo "      type: bigquery" >> profiles.yml
+        echo "      method: service-account" >> profiles.yml
+        echo "      project: your-gcp-project-id" >> profiles.yml
+        echo "      dataset: silver" >> profiles.yml
+        echo "      threads: 4" >> profiles.yml
+        echo "      keyfile: '${{ env.CREDENTIALS_FILE_PATH }}'" >> profiles.yml
+
+    - name: Create DBT profiles.yml for gold
       working-directory: ./chicago-gold
       run: |
-        dbt run --target prod
+        echo "chicago_profile:" > profiles.yml
+        echo "  target: prod" >> profiles.yml
+        echo "  outputs:" >> profiles.yml
+        echo "    prod:" >> profiles.yml
+        echo "      type: bigquery" >> profiles.yml
+        echo "      method: service-account" >> profiles.yml
+        echo "      project: your-gcp-project-id" >> profiles.yml
+        echo "      dataset: gold" >> profiles.yml
+        echo "      threads: 4" >> profiles.yml
+        echo "      keyfile: '${{ env.CREDENTIALS_FILE_PATH }}'" >> profiles.yml
+
+    - name: Run DBT models for silver (dev)
+      working-directory: ./chicago-silver
+      run: |
+        dbt run --profiles-dir ./chicago-silver --target prod
+
+    - name: Run DBT models for gold (prod)
+      working-directory: ./chicago-gold
+      run: |
+        dbt run --profiles-dir ./chicago-gold --target prod
